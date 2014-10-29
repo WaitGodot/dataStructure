@@ -13,5 +13,5 @@ main.o : src/main.cpp
 
 .PHONY : clean
 clean : 
-		rm -rf $(target) $(objects)
+		-rm -rf $(target) $(objects)
 
