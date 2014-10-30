@@ -1,13 +1,15 @@
 #ifndef _MACRO_CONFIG_H
 #define _MACRO_CONFIG_H
-#include <iostream>
+
+#include <stdio.h>
 #include <assert.h>
-#include <gl/glew.h>
+#include <GL/glew.h>
 
 //macro
 // #ifndef _MACRO_SWITCH
-// #define _MACRO_SWITH 0
+// #define _MACRO_SWITCH 
 // #endif
+
 #define _MACRO_SWITCH
 
 #if !defined(_MACRO_SWITCH) 
@@ -39,8 +41,12 @@
 
 
 
-#ifndef ASSERT
-#define ASSERT(_condition_,_msg_) assert(_condition_,_msg_)
+#ifndef CXASSERT
+#define CXASSERT(_condition_,_msg_) \
+	do\
+	{\
+		assert(_condition_);\
+	} while (0);
 #endif
 
 #ifndef BREAK_IF
