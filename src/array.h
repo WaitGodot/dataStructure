@@ -27,19 +27,15 @@ namespace dataStructure
 			typedef std::size_t		size_type;
 			typedef std::ptrdiff_t	difference_type;
 			
-			
 			static const size_type ARRAY_END				 = 2147463645;
 			static const size_type ARRAY_DEFAULT_CAPACITY	 = 2;
 
-			array(){
-				constructor(0);
-			}
-			array(size_type capacity){
+			array(size_type capacity = 0){
 				constructor(capacity);
 			}
 
 			void insert	(value_type value,size_type pos = ARRAY_END){
-				reAlloc();
+				__resize();
 				__insert(value,pos);
 			}
 
@@ -86,6 +82,13 @@ namespace dataStructure
 			bool empty(){
 				return m_size > 0 ? true : false;
 			}
+
+			void clear(){
+				size_type capacity = m_capacity;
+				destructor();
+				constructor(capacity);
+			}
+
 			size_type size(){
 				return m_size;
 			}
@@ -115,7 +118,7 @@ namespace dataStructure
 				m_data = 0;
 			}
 			
-			void reAlloc(){
+			void __resize(){
 				if (m_size < m_capacity){
 					return ;
 				}
