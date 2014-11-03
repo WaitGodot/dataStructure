@@ -8,7 +8,7 @@ objects = main.o
 $(target) : $(objects)
 	$(cc) -o $(target) $(objects)
 
-main.o: src/main.cpp src/macroConfig.h src/array.h
+main.o: src/main.cpp src/macroConfig.h src/array.h src/list.h
 		$(cc) -g -c src/main.cpp
 
 .PHONY : clean

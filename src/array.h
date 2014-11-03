@@ -80,7 +80,7 @@ namespace dataStructure
 			}
 			//
 			bool empty(){
-				return m_size > 0 ? true : false;
+				return m_size == 0 ;
 			}
 
 			void clear(){
