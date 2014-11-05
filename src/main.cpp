@@ -62,10 +62,16 @@ void list_test()
 	a.insert(31);
 	a.insert(32);
 	a.insert(33);
+	a.insert(34);
+	a.insert(35);
 	a.print();
+	LOG("iterator test!");
+	a.remove(a.begin());
 	cout << a.front() <<"\t"<<a.back()<<"\n";
 	a.remove_front();
 	a.print();
-	
+	for(list<int>::iterator it = a.begin();it!=a.end();++it){
+		cout<< (*it) << "\t";
+	}
 	LOG("list test over!");
 }

@@ -14,8 +14,6 @@ class list
 {
 	public:
 		typedef T			value_type;
-		typedef T*			iterator;
-		typedef const T*	const_iterator;
 		typedef T&			reference;
 		typedef const T&	const_reference;
 		typedef std::size_t size_type;
@@ -29,9 +27,73 @@ class list
 				listNode* next;
 		};
 
+		class iterator
+		{
+			friend list<T>;
+			public:
+				iterator(listNode* node = 0){
+					m_node = node;
+				}
+				~iterator(){
+					m_node = 0;
+				}
+				
+				iterator(const iterator& rv){
+					*this = rv;
+				}				
+				void operator=(const iterator& rv){
+					*this = rv;
+				}
+				bool operator==(const iterator& rv){
+					return this->m_node == rv.m_node;
+				}
+				bool operator!=(const iterator& rv){
+					return this->m_node != rv.m_node;
+				}
+				reference operator*(){
+					return m_node->data;
+				}
+				iterator operator++(int){
+					iterator rt = *this;
+					m_node = m_node->next;
+					return rt;
+				}
+				iterator& operator++(){
+					m_node = m_node->next;
+					return *this;
+				}
+
+			protected:
+				listNode* m_node;
+		};
+
+		class const_iterator : public iterator
+		{
+			friend list<T>;
+			public:
+				const_iterator(listNode* node):
+					iterator(node)
+				{
+
+				}
+				~const_iterator(){
+
+				}
+
+				const_reference operator*()const {
+					return iterator::operator*();
+				}
+		};
+		
+		typedef iterator iterator;
+		typedef const_iterator const_iterator;
+
 		list(){
 			m_head = m_tail = 0;
 			m_size = 0;
+		}
+		~list(){
+			__destructor();
 		}
 		
 		//insert
@@ -53,39 +115,13 @@ class list
 		}
 		//remove.
 		void remove(const_reference value){
-			listNode* node = __find(value);
-			if ( node == 0)
-			{
-				return ;
-			}
-			if(node->previous == 0)
-			{
-				m_head = node->next;
-			}else{
-				node->previous = node->next;
-				if(node->next == 0){
-					m_tail = node->previous;
-				}
-			}
-			
-			delete node;node = 0;
-			m_size -= 1;
+			__removeNode(__find(value));
 		}
 		void remove_front(){
-			if (m_head){
-				listNode* node = m_head;
-				m_head = m_head->next;
-				delete node ; node = 0;
-				m_size -= 1;
-			}
+			__removeNode(m_head);
 		}		
 		void remove_back(){
-			if(m_tail){
-				listNode* node = m_tail;
-				m_tail = m_tail->previous;
-				delete node ; node = 0;
-				m_size -= 1;
-			}
+			__removeNode(m_tail);
 		}
 		void filter(){
 
@@ -99,13 +135,8 @@ class list
 		}
 		
 		void clear(){
-			listNode* node = m_head;
-			listNode* temp = node;
-			while(node){
-				node = node->next;
-				delete temp;
-				temp = node;
-			}
+			m_head = m_tail = 0;
+			m_size = 0;
 		}
 		void print(){
 			listNode* node = m_head;
@@ -115,8 +146,38 @@ class list
 			}
 			std::cout<<"\n";
 		}
+
+		//iterator.
+		iterator remove(iterator it){
+			__removeNode((it++).m_node);
+			return it;
+		}
+		iterator begin(){
+			return iterator(m_head);
+		}
+		const_iterator cbegin(){
+			return const_iterator(m_head);
+		}
+		iterator end(){
+			return iterator(m_tail->next);
+		}
+		const_iterator cend(){
+			return iterator(m_tail->next);
+		}
 	private:
 		//function.
+		void __destructor(){
+			listNode* node = m_head;
+			listNode* temp = node;
+			while(node){
+				node = node->next;
+				delete temp;
+				temp = node;
+			}
+			m_head = m_tail = 0;
+			m_size = 0;
+		}
+
 		void __insert(const_reference value , size_type pos){
 			listNode* node = new listNode();
 			node->data = value;
@@ -151,6 +212,24 @@ class list
 				node = m_head->next;
 			}
 			return result;
+		}
+
+		void __removeNode(listNode* node){
+			if ( node == 0)
+			{
+				return ;
+			}
+			if(node->previous == 0)
+			{
+				m_head = node->next;
+			}else{
+				node->previous = node->next;
+				if(node->next == 0){
+					m_tail = node->previous;
+				}
+			}
+			delete node; node = 0;
+			m_size -= 1;
 		}
 		
 		// data.
