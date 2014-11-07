@@ -39,10 +39,11 @@ class list
 				}
 				
 				iterator(const iterator& rv){
-					*this = rv;
+					this->m_node = rv.m_node;
 				}				
-				void operator=(const iterator& rv){
-					*this = rv;
+				iterator& operator=(const iterator& rv){
+					this->m_node = rv.m_node;
+					return *this;
 				}
 				bool operator==(const iterator& rv){
 					return this->m_node == rv.m_node;
@@ -222,6 +223,7 @@ class list
 			if(node->previous == 0)
 			{
 				m_head = node->next;
+				m_head->previous = 0;
 			}else{
 				node->previous = node->next;
 				if(node->next == 0){

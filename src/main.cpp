@@ -68,6 +68,8 @@ void list_test()
 	LOG("iterator test!");
 	a.remove(a.begin());
 	cout << a.front() <<"\t"<<a.back()<<"\n";
+	a.print();
+	LOG("............................");
 	a.remove_front();
 	a.print();
 	for(list<int>::iterator it = a.begin();it!=a.end();++it){
