@@ -124,7 +124,7 @@ namespace dataStructure
 				}
 
 				m_capacity = (m_capacity == 0 ? ARRAY_DEFAULT_CAPACITY : m_capacity);
-				size_type n_capacity = m_capacity + m_capacity * 0.5;
+				size_type n_capacity = m_capacity + m_capacity / 2;
 				iterator n_d = new value_type[n_capacity];
 				for(int i = 0; i < m_size ; i++)
 				{
