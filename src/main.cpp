@@ -2,17 +2,20 @@
 #include "macroConfig.h"
 #include "array.h"
 #include "list.h"
+#include "stack.h"
 
 using namespace std;
 using namespace dataStructure;
 
 static void array_test();
 static void list_test();
+static void stack_test();
 
 int main()
 {
 	array_test();
 	list_test();
+	stack_test();
 
 	cout<<"c plus plus --> Hello World!\n";
 	return 0;
@@ -76,4 +79,24 @@ void list_test()
 		cout<< (*it) << "\t";
 	}
 	LOG("list test over!");
+}
+
+void stack_test()
+{
+	LOG("statck test start!");
+	stack<int> a;
+	a.print();
+	a.push(40);
+	a.print();
+	a.push(50);
+	a.print();
+	a.pop();
+	a.print();
+	a.push(60);
+	a.push(61);
+	a.push(62);
+	a.push(63);
+	a.print();
+	cout<< a.at(-1) <<"\t"<<a.at(1)<<"\t"<<a.at(a.size())<<"\n";
+	LOG("statck test over!");
 }
