@@ -3,6 +3,7 @@
 #include "array.h"
 #include "list.h"
 #include "stack.h"
+#include "bstree.h"
 
 using namespace std;
 using namespace dataStructure;
@@ -10,12 +11,14 @@ using namespace dataStructure;
 static void array_test();
 static void list_test();
 static void stack_test();
+static void bstree_test();
 
 int main()
 {
 	array_test();
 	list_test();
 	stack_test();
+	bstree_test();
 
 	cout<<"c plus plus --> Hello World!\n";
 	return 0;
@@ -99,4 +102,20 @@ void stack_test()
 	a.print();
 	cout<< a.at(-1) <<"\t"<<a.at(1)<<"\t"<<a.at(a.size())<<"\n";
 	LOG("statck test over!");
+}
+
+void bstree_test()
+{
+	LOG("binary search tree test start");
+	bstree<int> a;
+	a.print_preorder();
+	for (int i = 0 ; i < 10 ; i ++){
+		a.insert(i);
+		a.print_inorder();
+	}
+	a.print_preorder();
+	a.print_postorder();
+	a.remove(5);
+	a.print_inorder();
+	LOG("binary serarch tree test end");
 }

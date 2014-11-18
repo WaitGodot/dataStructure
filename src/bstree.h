@@ -4,7 +4,7 @@
 
 #include <cstddef>
 
-template<typedef T>
+template<typename T>
 class bstree
 {
 	public:
@@ -31,15 +31,16 @@ class bstree
 
 		bool insert(const_reference value){
 			bool rt = contain(value);
-			if (!rt){
-				return rt
+			if (rt){
+				return rt;
 			}
+			rt = true;
 			bsNode*	node = new	bsNode();
 			node->m_data = value;
 			node->m_leftChild = node->m_rightChild = 0;
 			if (!m_root){
 				m_root = node;
-				return ;
+				return rt;
 			}
 			__insert_node(m_root,node);
 			m_size += 1;
@@ -47,7 +48,7 @@ class bstree
 		}
 
 		bool remove(const_reference value){
-			bsNode* node = __contain_node(m_root,value);
+			bsNode* node = __contain_value(m_root,value);
 			bool rt = node == 0 ? false : true;
 			if(rt == false){
 				return rt;
@@ -61,21 +62,23 @@ class bstree
 		}
 
 		value_type maxValue(){
-			bsNode* rt = m_root;
-			while(rt->rightChild){
-				rt = rt->rightChild;
-			}
-			return rt->m_data;
+			return __max_node(m_root)->m_data;
 		}
 		value_type minValue(){
-			bsNode* rt = m_root;
-			while(rt->leftChild){
-				rt = rt->leftChild;
-			}
-			return rt->m_data;
+			return __min_node(m_root)->m_data;
 		}
 		size_type size(){
 			return m_size;
+		}
+		//TAG: will be remove
+		void print_preorder(){
+			__print_preorder(m_root,0);
+		}
+		void print_postorder(){
+			__print_postorder(m_root,0);
+		}
+		void print_inorder(){
+			__print_inorder(m_root,0);
 		}
 	private:
 		//function.
@@ -84,28 +87,34 @@ class bstree
 				return ;
 			}
 			__destructor_node( node-> m_leftChild);
-			__desturctor_node( node-> m_rightChild);
+			__destructor_node( node-> m_rightChild);
 			delete node;
 			node = 0;
 		}
 		void __insert_node(bsNode* parent, bsNode* node){
 			if( node->m_data >= parent->m_data ){
-				if(parent->rightChild){
-					__insert_node(parent->rightChild,node);
+				if(parent->m_rightChild){
+					__insert_node(parent->m_rightChild,node);
 				}else{
-					parent->rightChild = node;
+					parent->m_rightChild = node;
 				}
 			}else{
-				if(parent->leftChild){
-					__insert_node(parent->leftChild,node);
+				if(parent->m_leftChild){
+					__insert_node(parent->m_leftChild,node);
 				}else{
-					parent->leftChild = node;
+					parent->m_leftChild = node;
 				}
 			}
 		}
-		void __remove_node(bsNode* node){
-			if(!node->rigthNode && !node->leftNode){
-
+		void __remove_node(bsNode* &node){
+			if(!node->m_rightChild && !node->m_leftChild){
+				bsNode* dNode = __min_node(node->m_rightChild);
+				node->m_data = dNode->m_data;
+				__remove_node(dNode);
+			}else{
+				bsNode* temp = node;
+				node = (node->m_leftChild ? node->m_leftChild : node->m_rightChild);
+				delete temp;temp = 0;
 			}
 		}
 		bsNode* __contain_value(bsNode* node , const_reference value){
@@ -115,10 +124,52 @@ class bstree
 			if(node->m_data == value){
 				return node;
 			}else if( value > node->m_data){
-				return __contain_value( node->rightChild , value);
+				return __contain_value( node->m_rightChild , value);
 			}else if(value < node->m_data){
-				return __contain_value( node->leftChild , value);
+				return __contain_value( node->m_leftChild , value);
 			}
+		}
+		
+		bsNode* __max_node(bsNode* root){
+			return root->m_rightChild ? __max_node(root->m_rightChild) : root;
+		}
+		bsNode* __min_node(bsNode* root){
+			return root->m_leftChild ? __min_node(root->m_leftChild) : root;
+		}
+		
+		//TAG: will be remove.
+		void __print_preorder(bsNode* node, int depth){
+			if (!node){
+				return ;
+			}
+			for(int i = 0 ; i < depth ; i++){
+				std::cout<<"\t";
+			}
+			std::cout<<node->m_data << "\n";
+			__print_preorder(node->m_leftChild,depth+1);
+			__print_preorder(node->m_rightChild,depth+1);
+		}
+		void __print_postorder(bsNode* node,int depth){
+			if(!node){
+				return ;
+			}
+			__print_postorder(node->m_leftChild, depth + 1);
+			__print_postorder(node->m_rightChild,depth + 1);
+			for(int i = 0 ; i < depth ; i++){
+				std::cout << "\t";
+			}
+			std::cout << node->m_data << "\n";
+		}
+		void __print_inorder(bsNode* node,int depth){
+			if(!node){
+				return ;
+			}
+			__print_inorder(node->m_leftChild,depth + 1);
+			for(int i = 0 ; i < depth ; i++){
+				std::cout << "\t";
+			}
+			std::cout << node->m_data << "\n";
+			__print_inorder(node->m_rightChild,depth + 1);
 		}
 
 		bsNode*	m_root;
